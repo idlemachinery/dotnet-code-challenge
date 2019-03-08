@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PetStore.API</name>
+    </assembly>
+    <members>
+        <member name="M:PetStore.API.Controllers.OrdersController.GetOrder(System.Int32)">
+            <summary>
+            Get an order for a specific id
+            </summary>
+            <param name="id">The id of the order</param>
+            <returns>An ActionResult of type Order</returns>
+            <response code="200">Returns the requested order</response>
+        </member>
+        <member name="M:PetStore.API.Controllers.OrdersController.CreateOrder(PetStore.Core.Models.OrderForCreation)">
+            <summary>
+            Create an order with specified line items
+            </summary>
+            <param name="orderForCreation">The order to create</param>
+            <returns>An ActionResult of type Order</returns>
+            <response code="422">Validation error</response>
+        </member>
+    </members>
+</doc>
