@@ -11,13 +11,14 @@ namespace PetStore.Data
     {
         private readonly string _productUrl = 
             "https://vrwiht4anb.execute-api.us-east-1.amazonaws.com/default/product";
-        private CancellationTokenSource _cancellationTokenSource =
-            new CancellationTokenSource();
+        private CancellationTokenSource _cancellationTokenSource;
         private readonly IHttpClientFactory _httpClientFactory;
 
         public ProductService(IHttpClientFactory httpClientFactory)
         {
-            _httpClientFactory = httpClientFactory;
+            _httpClientFactory = httpClientFactory ?? 
+                throw new ArgumentNullException(nameof(httpClientFactory));
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         public async Task<ProductDetail> GetProductDetailAsync(string productId)

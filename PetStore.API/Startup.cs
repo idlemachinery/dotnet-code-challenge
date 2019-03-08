@@ -55,16 +55,7 @@ namespace PetStore.API
                 }
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            // suppress automatic model state validation when using the 
-            // ApiController attribute (as it will return a 400 Bad Request
-            // instead of the more correct 422 Unprocessable Entity when
-            // validation errors are encountered)
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
-
+            
             // register the DbContext on the container, getting the connection string from
             // appSettings (note: use this during development; in a production environment,
             // it's better to store the connection string in an environment variable)            
@@ -73,8 +64,21 @@ namespace PetStore.API
                 options.UseSqlite(connectionString);
             });
 
+            // register IOrderRepository
+            services.AddScoped<IOrdersRepository, OrdersRepository>();
+            //services.AddSingleton<IOrdersRepository, InMemoryOrdersRepository>();
+
+            // register IProductService to retrieve product details
+            services.AddScoped<IProductService, ProductService>();
+
             services.Configure<ApiBehaviorOptions>(options =>
             {
+                // suppress automatic model state validation when using the 
+                // ApiController attribute (as it will return a 400 Bad Request
+                // instead of the more correct 422 Unprocessable Entity when
+                // validation errors are encountered)
+                options.SuppressModelStateInvalidFilter = true;
+
                 options.InvalidModelStateResponseFactory = actionContext =>
                 {
                     var actionExecutingContext =
@@ -92,14 +96,7 @@ namespace PetStore.API
                     // we're dealing with null/unparsable input
                     return new BadRequestObjectResult(actionContext.ModelState);
                 };
-            });
-
-            // register IOrderRepository
-            services.AddScoped<IOrdersRepository, OrdersRepository>();
-            //services.AddSingleton<IOrdersRepository, InMemoryOrdersRepository>();
-
-            // register IProductService to retrieve product details
-            services.AddScoped<IProductService, ProductService>();
+            });            
 
             // add AutoMapper
             services.AddAutoMapper();
